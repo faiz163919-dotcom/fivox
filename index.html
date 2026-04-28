@@ -1,0 +1,215 @@
+
+1	import { createFileRoute } from '@tanstack/react-router'
+2	import { useState, useEffect } from 'react'
+3	import {
+4	  Chart as ChartJS,
+5	  CategoryScale,
+6	  LinearScale,
+7	  BarElement,
+8	  LineElement,
+9	  PointElement,
+10	  ArcElement,
+11	  Title,
+12	  Tooltip,
+13	  Legend,
+14	  Filler,
+15	} from 'chart.js'
+16	import { Bar, Line, Doughnut } from 'react-chartjs-2'
+17	import { DollarSign, Users, ShoppingCart, TrendingUp } from 'lucide-react'
+18	
+19	ChartJS.register(
+20	  CategoryScale,
+21	  LinearScale,
+22	  BarElement,
+23	  LineElement,
+24	  PointElement,
+25	  ArcElement,
+26	  Title,
+27	  Tooltip,
+28	  Legend,
+29	  Filler,
+30	)
+31	
+32	export const Route = createFileRoute('/')({
+33	  component: Home,
+34	})
+35	
+36	const months = [
+37	  'Jan',
+38	  'Feb',
+39	  'Mar',
+40	  'Apr',
+41	  'May',
+42	  'Jun',
+43	  'Jul',
+44	  'Aug',
+45	  'Sep',
+46	  'Oct',
+47	  'Nov',
+48	  'Dec',
+49	]
+50	
+51	const revenueData = {
+52	  labels: months,
+53	  datasets: [
+54	    {
+55	      label: 'Revenue ($)',
+56	      data: [
+57	        12000, 19000, 15000, 22000, 18000, 24000, 20000, 27000, 23000, 29000,
+58	        25000, 32000,
+59	      ],
+60	      backgroundColor: 'rgba(59, 130, 246, 0.7)',
+61	      borderRadius: 6,
+62	    },
+63	  ],
+64	}
+65	
+66	const userGrowthData = {
+67	  labels: months,
+68	  datasets: [
+69	    {
+70	      label: 'Users',
+71	      data: [
+72	        1200, 1900, 2400, 2800, 3200, 3900, 4100, 4800, 5200, 5900, 6400, 7200,
+73	      ],
+74	      borderColor: 'rgb(16, 185, 129)',
+75	      backgroundColor: 'rgba(16, 185, 129, 0.1)',
+76	      fill: true,
+77	      tension: 0.4,
+78	      pointBackgroundColor: 'rgb(16, 185, 129)',
+79	    },
+80	  ],
+81	}
+82	
+83	const salesCategoryData = {
+84	  labels: ['Electronics', 'Clothing', 'Home & Garden', 'Books', 'Sports'],
+85	  datasets: [
+86	    {
+87	      data: [35, 25, 20, 12, 8],
+88	      backgroundColor: [
+89	        'rgba(59, 130, 246, 0.8)',
+90	        'rgba(16, 185, 129, 0.8)',
+91	        'rgba(245, 158, 11, 0.8)',
+92	        'rgba(239, 68, 68, 0.8)',
+93	        'rgba(139, 92, 246, 0.8)',
+94	      ],
+95	      borderWidth: 0,
+96	    },
+97	  ],
+98	}
+99	
+100	const stats = [
+101	  {
+102	    title: 'Total Revenue',
+103	    value: '$266,000',
+104	    change: '+12.5%',
+105	    icon: DollarSign,
+106	    color: 'bg-blue-500',
+107	  },
+108	  {
+109	    title: 'Total Users',
+110	    value: '7,200',
+111	    change: '+8.2%',
+112	    icon: Users,
+113	    color: 'bg-emerald-500',
+114	  },
+115	  {
+116	    title: 'Orders',
+117	    value: '1,840',
+118	    change: '+5.1%',
+119	    icon: ShoppingCart,
+120	    color: 'bg-amber-500',
+121	  },
+122	  {
+123	    title: 'Conversion Rate',
+124	    value: '3.24%',
+125	    change: '+1.8%',
+126	    icon: TrendingUp,
+127	    color: 'bg-violet-500',
+128	  },
+129	]
+130	
+131	function Home() {
+132	  const [mounted, setMounted] = useState(false)
+133	  useEffect(() => setMounted(true), [])
+134	
+135	  return (
+136	    <div className="min-h-screen bg-gray-50">
+137	      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+138	        <h1 className="text-3xl font-bold text-gray-900 mb-8">
+139	          Analytics Dashboard
+140	        </h1>
+141	
+142	        {/* Stat Cards */}
+143	        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+144	          {stats.map((stat) => (
+145	            <div
+146	              key={stat.title}
+147	              className="bg-white rounded-xl shadow-sm p-6 flex items-center gap-4"
+148	            >
+149	              <div className={`${stat.color} p-3 rounded-lg`}>
+150	                <stat.icon className="w-6 h-6 text-white" />
+151	              </div>
+152	              <div>
+153	                <p className="text-sm text-gray-500">{stat.title}</p>
+154	                <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
+155	                <p className="text-sm text-emerald-600 font-medium">
+156	                  {stat.change}
+157	                </p>
+158	              </div>
+159	            </div>
+160	          ))}
+161	        </div>
+162	
+163	        {/* Charts */}
+164	        {mounted && (
+165	          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+166	            <div className="bg-white rounded-xl shadow-sm p-6">
+167	              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+168	                Monthly Revenue
+169	              </h2>
+170	              <Bar
+171	                data={revenueData}
+172	                options={{
+173	                  responsive: true,
+174	                  plugins: { legend: { display: false } },
+175	                  scales: { y: { beginAtZero: true } },
+176	                }}
+177	              />
+178	            </div>
+179	
+180	            <div className="bg-white rounded-xl shadow-sm p-6">
+181	              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+182	                User Growth
+183	              </h2>
+184	              <Line
+185	                data={userGrowthData}
+186	                options={{
+187	                  responsive: true,
+188	                  plugins: { legend: { display: false } },
+189	                  scales: { y: { beginAtZero: true } },
+190	                }}
+191	              />
+192	            </div>
+193	
+194	            <div className="bg-white rounded-xl shadow-sm p-6">
+195	              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+196	                Sales by Category
+197	              </h2>
+198	              <div className="max-w-sm mx-auto">
+199	                <Doughnut
+200	                  data={salesCategoryData}
+201	                  options={{
+202	                    responsive: true,
+203	                    plugins: { legend: { position: 'bottom' } },
+204	                  }}
+205	                />
+206	              </div>
+207	            </div>
+208	          </div>
+209	        )}
+210	      </div>
+211	    </div>
+212	  )
+213	}
+214
